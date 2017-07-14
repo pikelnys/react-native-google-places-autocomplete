@@ -385,16 +385,15 @@ export const GooglePlacesAutocomplete = React.createClass({
     } else if (rowData.isCurrentLocation === true) {
 
       // display loader
-      this._enableRowLoader(rowData);
+      this._disableRowLoaders();
+      this._onBlur();
 
       this.setState({
         text: this._renderDescription( rowData ),
       });
-      this.triggerBlur(); // hide keyboard but not the results
 
       delete rowData.isLoading;
-
-      this.getCurrentLocation();
+      this.props.onPress(rowData);
 
     } else {
       this.setState({
