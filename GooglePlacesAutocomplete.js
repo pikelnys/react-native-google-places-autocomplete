@@ -6,12 +6,10 @@ import {
   View,
   ListView,
   ScrollView,
-  Image,
   Text,
   StyleSheet,
   Dimensions,
   TouchableHighlight,
-  TouchableWithoutFeedback,
   Platform,
   ActivityIndicator,
   PixelRatio
@@ -78,8 +76,7 @@ const defaultStyles = {
   },
 };
 
-const GooglePlacesAutocomplete = React.createClass({
-
+export const GooglePlacesAutocomplete = React.createClass({
   propTypes: {
     placeholder: React.PropTypes.string,
     placeholderTextColor: React.PropTypes.string,
@@ -660,23 +657,6 @@ const GooglePlacesAutocomplete = React.createClass({
     });
   },
 
-  _shouldShowPoweredLogo() {
-
-    if (!this.props.enablePoweredByContainer || this.state.dataSource.getRowCount() == 0) {
-      return false
-    }
-
-    for (let i = 0; i < this.state.dataSource.getRowCount(); i++) {
-      let row = this.state.dataSource.getRowData(0, i);
-
-      if (!row.hasOwnProperty('isCurrentLocation') && !row.hasOwnProperty('isPredefinedPlace')) {
-        return true
-      }
-    }
-
-    return false
-  },
-
   _renderLeftButton() {
     if (this.props.renderLeftButton) {
       return this.props.renderLeftButton()
@@ -688,24 +668,6 @@ const GooglePlacesAutocomplete = React.createClass({
         return this.props.renderRightButton()
       }
     },
-
-  _renderPoweredLogo() {
-    if (!this._shouldShowPoweredLogo()) {
-      return null
-    }
-
-    return (
-      <View
-          style={[defaultStyles.row, defaultStyles.poweredContainer, this.props.styles.poweredContainer]}
-        >
-          <Image
-            style={[defaultStyles.powered, this.props.styles.powered]}
-            resizeMode={Image.resizeMode.contain}
-            source={require('./images/powered_by_google_on_white.png')}
-          />
-        </View>
-    );
-  },
 
   _getListView() {
     if ((this.state.text !== '' || this.props.predefinedPlaces.length || this.props.currentLocation === true) && this.state.listViewDisplayed === true) {
@@ -719,13 +681,13 @@ const GooglePlacesAutocomplete = React.createClass({
           automaticallyAdjustContentInsets={false}
           {...this.props}
           renderRow={this._renderRow}
-          renderFooter={this._renderPoweredLogo}
         />
       );
     }
 
     return null;
   },
+
   render() {
     let {
       onFocus,
@@ -748,7 +710,6 @@ const GooglePlacesAutocomplete = React.createClass({
             onChangeText={this._handleChangeText}
             value={this.state.text}
             placeholder={this.props.placeholder}
-
             placeholderTextColor={this.props.placeholderTextColor}
             onFocus={onFocus ? () => {this._onFocus(); onFocus()} : this._onFocus}
             clearButtonMode="while-editing"
@@ -765,7 +726,7 @@ const GooglePlacesAutocomplete = React.createClass({
 
 
 // this function is still present in the library to be retrocompatible with version < 1.1.0
-const create = function create(options = {}) {
+export function create(options = {}) {
   return React.createClass({
     render() {
       return (
@@ -777,8 +738,3 @@ const create = function create(options = {}) {
   });
 };
 
-
-module.exports = {
-  GooglePlacesAutocomplete,
-  create
-};
